@@ -276,4 +276,4 @@ object Main extends LazyLogging {
 
 ## Who do I talk to? ##
 
-This project was generated from [this quickstart](https://github.com/sbchapin/quickstart-scala-sbt-native-image.g8) by $maintainer$
+This project was generated from [this quickstart](https://github.com/chenghsienwen/quickstart-scala-sbt-native-image.g8) by $maintainer$

@@ -1,0 +1,40 @@
+/**
+ * For the detail of `gitCheckout`,
+ *                   `withJavaSbtEnv`,
+ *                   `scoverage`,
+ *                   `deployQuadas`
+ * please go to https://git.vpon.com/adx/jenkins-pipeline-library
+ */
+
+@Library('dsp')
+name = "$name$"
+
+node {
+
+    javaHome = tool name: 'JDK8'
+    sbtHome = tool name: 'sbt'
+
+    stage('SCM Checkout') {
+        gitCheckout "http://git.vpon.com/adx/$"$"${name}.git"
+    }
+
+    stage('Unit Test') {
+        withJavaSbtEnv(java: javaHome, sbt: sbtHome) {
+            sh 'sbt validate || true'
+            junit 'target/test-reports/*.xml'
+            scoverage reportDir: './target/scala-2.12/scoverage-report', reportFile: 'scoverage.xml'
+        }
+    }
+
+    stage('Build') {
+        withJavaSbtEnv(java: javaHome, sbt: sbtHome) {
+            sh 'sbt graalvm-native-image:packageBin'
+        }
+    }
+
+    stage("Deploy") {
+        withJavaSbtEnv(java: javaHome, sbt: sbtHome) {
+            sh 'sbt publish'
+        }
+    }
+}
